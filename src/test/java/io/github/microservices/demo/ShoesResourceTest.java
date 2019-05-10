@@ -12,7 +12,7 @@ public class ShoesResourceTest {
     @Test
     public void testHelloEndpoint() {
         given()
-          .when().get("/shoes")
+          .when().get("/shoes/hello")
           .then()
              .statusCode(200)
              .body(is("hello"));

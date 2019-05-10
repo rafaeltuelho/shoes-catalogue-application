@@ -2,7 +2,7 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>io.github.microservices</groupId>
+  <groupId>io.github.microservices.demo</groupId>
   <artifactId>shoes-catalogue-application</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
@@ -41,8 +41,16 @@
     <dependency>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-jdbc-postgresql</artifactId>
-    </dependency>    
+    </dependency>   
     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-kubernetes</artifactId>
+    </dependency>     
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-opentracing</artifactId>
+    </dependency>
+    <dependency>      
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
@@ -116,7 +124,8 @@
           <executions>
               <execution>
                   <id>docker-start</id>
-                  <phase>test-compile</phase>
+                  <!-- phase>test-compile</phase -->
+                  <phase>none</phase>
                   <goals>
                       <goal>stop</goal>
                       <goal>start</goal>
