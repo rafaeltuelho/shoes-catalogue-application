@@ -5,9 +5,9 @@ cache:
   directories:
   - $HOME/.m2
 
-before_install:
-- unset -v _JAVA_OPTIONS
-- wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+#before_install:
+#- unset -v _JAVA_OPTIONS
+#- wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
 
 before_script:
 - export GRAALVM_HOME=$JAVA_HOME
@@ -19,7 +19,7 @@ jobs:
   - stage: build_jvm
     name: Build Java pgk using OpenJDK 8
     env: JDK=8
-    install: source install-jdk.sh -F 8
+    install: true
     script: ./mvnw package -DskipTests -Ddocker.skip
 
 #  - stage: build_native
