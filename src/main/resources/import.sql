@@ -24,23 +24,29 @@ INSERT INTO tag (id, name) VALUES (nextval('hibernate_sequence'), 'footware');  
 INSERT INTO tag (id, name) VALUES (nextval('hibernate_sequence'), 'cognac');      --18
 INSERT INTO tag (id, name) VALUES (nextval('hibernate_sequence'), 'lace-ups');    --19
 INSERT INTO tag (id, name) VALUES (nextval('hibernate_sequence'), 'navy');        --20
+INSERT INTO tag (id, name) VALUES (nextval('hibernate_sequence'), 'shoe');        --21
 
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12659320', '15');
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12659320', '17');
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12659320', '3');
+INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12659320', '21');
 
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12648759', '1');
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12648759', '17');
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12648759', '11');
+INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12659320', '21');
 
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12649298', '13');
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12649298', '17');
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12649298', '5');
+INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12659320', '21');
 
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12651277', '18');
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12651277', '17');
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12651277', '19');
+INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12659320', '21');
 
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12653586', '6');
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12653586', '17');
 INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12653586', '20');
+INSERT INTO shoe_tag (shoe_id, tag_id) VALUES ('12659320', '21');
