@@ -1,6 +1,9 @@
 language: java
 dist: trusty
 
+services:
+  - docker
+
 cache:
   directories:
   - $HOME/.m2
@@ -33,15 +36,14 @@ jobs:
     install: true
     script:
     - ./mvnw package -DskipTests -Ddocker.skip -Pnative -Dnative-image.docker-build=true
-    - docker build -f src/main/docker/Dockerfile.native -t ${REGISTRY_USER_NAMESPACE}/shoes-catalogue-application .
-    - docker tag ${REGISTRY_REPO}/shoes-catalogue-application ${REGISTRY_SERVER}/${REGISTRY_USER_NAMESPACE}/shoes-catalogue-application
+    - docker build -f src/main/docker/Dockerfile.native -t ${REGISTRY_USER_NAMESPACE}/${TRAVIS_REPO_SLUG} .
+    - docker tag ${TRAVIS_REPO_SLUG} ${REGISTRY_SERVER}/${TRAVIS_REPO_SLUG}
 
-  - stage: docker_push
-    name: Push image to ${REGISTRY_SERVER}
-    install: true
-    script:
-    - docker login -u="${REGISTRY_AUTH_USER}" -p="${REGISTRY_AUTH_PASSWORD}"
-    - docker push ${REGISTRY_SERVER}/${REGISTRY_REPO}/shoes-catalogue-application
+deploy:
+  provider: script
+  script: docker_push.sh
+  on:
+    branch: master
 
 after_script:
-- echo fired by git webhook
+- docker images
