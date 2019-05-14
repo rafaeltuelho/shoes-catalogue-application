@@ -11,27 +11,41 @@ before_install:
 
 before_script:
 - export GRAALVM_HOME=$JAVA_HOME
-- echo $GRAALVM_HOME
-- echo ls $GRAALVM_HOME
+- echo JAVA_HOME = $JAVA_HOME
+- ls $JAVA_HOME/bin
 
 jobs:
   include:
   - stage: build_jvm
-    name: Build Java pgk usin OpenJDK 8
+    name: Build Java pgk using OpenJDK 8
     env: JDK=8
-    install: true
+    install: source install-jdk.sh -F 8
     script: ./mvnw package -DskipTests -Ddocker.skip
 
+#  - stage: build_native
+#    name: Build native pkg usin the GraalVM
+#    env: JDK=graalvm-1.0.0-rc16
+#    install: source install-jdk.sh --url https://github.com/oracle/graal/releases/download/vm-1.0.0-rc16/graalvm-ce-1.0.0-rc16-linux-amd64.tar.gz
+#    script: ./mvnw package -Dnative -DskipTests -Ddocker.skip
+
   - stage: build_native
-    name: Build native pkg usin the GraalVM
-    env: JDK=graalvm-19.0.0
-    install: source install-jdk.sh --url https://github.com/oracle/graal/releases/download/vm-19.0.0/graalvm-ce-linux-amd64-19.0.0.tar.gz
-    script: ./mvnw package -Dnative -DskipTests -Ddocker.skip
+    name: Build native pkg usin the GraalVM inside a Docker Container
+    install: true
+    script: ./mvnw package -DskipTests -Ddocker.skip -Pnative -Dnative-image.docker-build=true
+
+  - stage: build_native_docker_image
+    name: Build native Docker Image
+    install: true
+    script:
+    - docker build -f src/main/docker/Dockerfile.native -t ${REGISTRY_USER_NAMESPACE}/shoes-catalogue-application .
+    - docker tag ${REGISTRY_REPO}/shoes-catalogue-application ${REGISTRY_SERVER}/${REGISTRY_USER_NAMESPACE}/shoes-catalogue-application
+
+  - stage: docker_push
+    name: Push image to ${REGISTRY_SERVER}
+    install: true
+    script:
+    - echo docker login -u="${REGISTRY_AUTH_USER}" -p="${REGISTRY_AUTH_PASSWORD}"
+    - echo docker push ${REGISTRY_SERVER}/${REGISTRY_REPO}/shoes-catalogue-application
 
 after_script:
 - echo fired by git webhook
-- echo JAVA_HOME = ${JAVA_HOME}
-- echo PATH = ${PATH}
-- ls ${JAVA_HOME}
-- java -version
-- mvn --version
