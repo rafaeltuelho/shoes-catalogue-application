@@ -31,12 +31,8 @@ jobs:
   - stage: build_native
     name: Build native pkg usin the GraalVM inside a Docker Container
     install: true
-    script: ./mvnw package -DskipTests -Ddocker.skip -Pnative -Dnative-image.docker-build=true
-
-  - stage: build_native_docker_image
-    name: Build native Docker Image
-    install: true
     script:
+    - ./mvnw package -DskipTests -Ddocker.skip -Pnative -Dnative-image.docker-build=true
     - docker build -f src/main/docker/Dockerfile.native -t ${REGISTRY_USER_NAMESPACE}/shoes-catalogue-application .
     - docker tag ${REGISTRY_REPO}/shoes-catalogue-application ${REGISTRY_SERVER}/${REGISTRY_USER_NAMESPACE}/shoes-catalogue-application
 
@@ -44,8 +40,8 @@ jobs:
     name: Push image to ${REGISTRY_SERVER}
     install: true
     script:
-    - echo docker login -u="${REGISTRY_AUTH_USER}" -p="${REGISTRY_AUTH_PASSWORD}"
-    - echo docker push ${REGISTRY_SERVER}/${REGISTRY_REPO}/shoes-catalogue-application
+    - docker login -u="${REGISTRY_AUTH_USER}" -p="${REGISTRY_AUTH_PASSWORD}"
+    - docker push ${REGISTRY_SERVER}/${REGISTRY_REPO}/shoes-catalogue-application
 
 after_script:
 - echo fired by git webhook
