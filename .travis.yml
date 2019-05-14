@@ -9,6 +9,11 @@ before_install:
 - unset -v _JAVA_OPTIONS
 - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
 
+before_script:
+- export GRAALVM_HOME=$JAVA_HOME
+- echo $GRAALVM_HOME
+- echo ls $GRAALVM_HOME
+
 jobs:
   include:
   - stage: build_jvm
