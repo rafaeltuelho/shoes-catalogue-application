@@ -5,7 +5,7 @@ cache:
   directories:
   - $HOME/.m2
 
-before_script:
+before_install:
 - unset -v _JAVA_OPTIONS
 - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
 
@@ -15,7 +15,6 @@ jobs:
     name: Build Java pgk usin OpenJDK 8
     env: JDK=8
     install: true
-    #script: source install-jdk.sh -F 8
     script: ./mvnw package -DskipTests -Ddocker.skip
 
   - stage: build_native
