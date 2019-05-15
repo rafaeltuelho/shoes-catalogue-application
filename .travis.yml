@@ -1,4 +1,5 @@
 language: java
+jdk: openjdk8
 dist: trusty
 
 services:
@@ -8,12 +9,7 @@ cache:
   directories:
   - $HOME/.m2
 
-#before_install:
-#- unset -v _JAVA_OPTIONS
-#- wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
-
 before_script:
-- export GRAALVM_HOME=$JAVA_HOME
 - echo JAVA_HOME = $JAVA_HOME
 - ls $JAVA_HOME/bin
 
@@ -25,12 +21,6 @@ jobs:
     install: true
     script: ./mvnw package -DskipTests -Ddocker.skip
 
-#  - stage: build_native
-#    name: Build native pkg usin the GraalVM
-#    env: JDK=graalvm-1.0.0-rc16
-#    install: source install-jdk.sh --url https://github.com/oracle/graal/releases/download/vm-1.0.0-rc16/graalvm-ce-1.0.0-rc16-linux-amd64.tar.gz
-#    script: ./mvnw package -Dnative -DskipTests -Ddocker.skip
-
   - stage: build_push
     name: Build native pkg using the GraalVM inside a Docker Container
     install: true
@@ -39,5 +29,5 @@ jobs:
     - docker build -f src/main/docker/Dockerfile.native -t ${TRAVIS_REPO_SLUG} .
     - docker tag ${TRAVIS_REPO_SLUG} ${REGISTRY_SERVER}/${TRAVIS_REPO_SLUG}
     - docker images
-    - docker login -u="${REGISTRY_AUTH_USER}" -p="${REGISTRY_AUTH_PASSWORD}"
+    - echo "$REGISTRY_AUTH_PASSWORD" | docker login -u "$REGISTRY_AUTH_USER" --password-stdin ${REGISTRY_SERVER}
     - docker push ${REGISTRY_SERVER}/${TRAVIS_REPO_SLUG}
