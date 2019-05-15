@@ -31,19 +31,13 @@ jobs:
 #    install: source install-jdk.sh --url https://github.com/oracle/graal/releases/download/vm-1.0.0-rc16/graalvm-ce-1.0.0-rc16-linux-amd64.tar.gz
 #    script: ./mvnw package -Dnative -DskipTests -Ddocker.skip
 
-  - stage: build_native
-    name: Build native pkg usin the GraalVM inside a Docker Container
+  - stage: build_push
+    name: Build native pkg using the GraalVM inside a Docker Container
     install: true
     script:
     - ./mvnw package -DskipTests -Ddocker.skip -Pnative -Dnative-image.docker-build=true
     - docker build -f src/main/docker/Dockerfile.native -t ${REGISTRY_USER_NAMESPACE}/${TRAVIS_REPO_SLUG} .
     - docker tag ${TRAVIS_REPO_SLUG} ${REGISTRY_SERVER}/${TRAVIS_REPO_SLUG}
-
-deploy:
-  provider: script
-  script: docker_push.sh
-  on:
-    branch: master
-
-after_script:
-- docker images
+    - docker images
+    - echo "$REGISTRY_AUTH_PASSWORD" | docker login -u "$REGISTRY_AUTH_USER" --password-stdin
+    - docker push ${REGISTRY_SERVER}/${TRAVIS_REPO_SLUG}
