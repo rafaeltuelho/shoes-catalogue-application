@@ -10,24 +10,14 @@ cache:
   - $HOME/.m2
 
 before_script:
-- echo JAVA_HOME = $JAVA_HOME
-- ls $JAVA_HOME/bin
+  - echo JAVA_HOME = $JAVA_HOME
+  - ls $JAVA_HOME/bin
 
-jobs:
-  include:
-  - stage: build_jvm
-    name: Build Java pgk using OpenJDK 8
-    env: JDK=8
-    install: true
-    script: ./mvnw package -DskipTests -Ddocker.skip
-
-  - stage: build_push
-    name: Build native pkg using the GraalVM inside a Docker Container
-    install: true
-    script:
-    - ./mvnw package -DskipTests -Ddocker.skip -Pnative -Dnative-image.docker-build=true
-    - docker build -f src/main/docker/Dockerfile.native -t ${TRAVIS_REPO_SLUG} .
-    - docker tag ${TRAVIS_REPO_SLUG} ${REGISTRY_SERVER}/${TRAVIS_REPO_SLUG}
-    - docker images
-    - echo "$REGISTRY_AUTH_PASSWORD" | docker login -u "$REGISTRY_AUTH_USER" --password-stdin ${REGISTRY_SERVER}
-    - docker push ${REGISTRY_SERVER}/${TRAVIS_REPO_SLUG}
+install: true
+script:
+  - ./mvnw package -DskipTests -Ddocker.skip -Pnative -Dnative-image.docker-build=true
+  - docker build -f src/main/docker/Dockerfile.native -t ${TRAVIS_REPO_SLUG} .
+  - docker tag ${TRAVIS_REPO_SLUG} ${REGISTRY_SERVER}/${TRAVIS_REPO_SLUG}
+  - docker images
+  - echo "$REGISTRY_AUTH_PASSWORD" | docker login -u "$REGISTRY_AUTH_USER" --password-stdin ${REGISTRY_SERVER}
+  - docker push ${REGISTRY_SERVER}/${TRAVIS_REPO_SLUG}
