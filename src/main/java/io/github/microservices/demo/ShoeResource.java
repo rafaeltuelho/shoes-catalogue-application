@@ -3,6 +3,7 @@ package io.github.microservices.demo;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -14,13 +15,21 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 @Path("/shoes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
+@Timed(name="request_duration_seconds", 
+        displayName="Request duration in seconds.",
+        unit = MetricUnits.SECONDS,
+        absolute=true)
 public class ShoeResource {
+    public ShoeResource() {
+    }
 
     @GET
     public List<Shoe> getAll() {
@@ -52,6 +61,7 @@ public class ShoeResource {
         @Override
         public Response toResponse(Exception exception) {
             int code = 500;
+            exception.printStackTrace();
             if (exception instanceof WebApplicationException) {
                 code = ((WebApplicationException) exception).getResponse().getStatus();
             }
